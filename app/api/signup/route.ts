@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const queryCondition = isEmail ? { id: email } : { id: email };
+    const queryCondition = isEmail ? { email: email } : { phoneNumber: email };
 
     const existingUser = await Prisma.user.findFirst({
       where: queryCondition,
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       return new NextResponse('User is already registered', { status: 409 });
     } else if (existingUser) {
       const updatedUser = await Prisma.user.update({
-        where: queryCondition,
+        where: { id: existingUser.id },
         data: {
           name,
           password: hashedPassword,
