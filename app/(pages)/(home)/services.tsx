@@ -109,7 +109,7 @@ const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
 
   const ApplyButton = () => (
     <Button
-      className='w-full font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-105'
+      className='w-full font-semibold bg-green-500 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700 rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-105'
       variant='secondary'
     >
       Apply Now
