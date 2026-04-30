@@ -97,17 +97,6 @@ export interface Design {
   }>;
 }
 
-export interface Application {
-  id: string;
-  firstName: string;
-  lastName: string;
-  duration: string;
-  image: string;
-  course: string;
-  status: string;
-  createdAt: string;
-}
-
 export interface ApplicationDetail {
   studentName: string;
   fatherName: string;
@@ -190,29 +179,6 @@ export interface ApplicationSummary {
   certificate: string;
   mobileNumber: string;
   editable: boolean | null;
-}
-
-export interface DesignList {
-  data: {
-    id: string;
-    image: string;
-    name: string;
-    category: string;
-    subcategory: string;
-    createdAt: Date;
-  }[];
-  meta: {
-    totalItems: number;
-    totalPages: number;
-    currentPage: number;
-    itemsPerPage: number;
-  };
-}
-
-export interface SimpleComment {
-  id: string;
-  content: string;
-  createdAt: string;
 }
 
 export interface Testimonial {

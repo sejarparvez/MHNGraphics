@@ -6,7 +6,7 @@ import {
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function DonorCardSkeleton() {
+function DonorCardSkeleton() {
   return (
     <Card className='overflow-hidden'>
       <CardHeader className='pb-2'>

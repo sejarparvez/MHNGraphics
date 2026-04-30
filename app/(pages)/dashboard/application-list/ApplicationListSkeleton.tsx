@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function ApplicationCardSkeleton() {
+function ApplicationCardSkeleton() {
   return (
     <Card className='relative overflow-hidden'>
       <div className='p-4'>

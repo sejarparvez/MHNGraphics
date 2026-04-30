@@ -1,11 +1,11 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import Image, { type StaticImageData } from 'next/image';
 import { Card } from '@/components/ui/card';
 import img2 from '@/images/best-computer/img1.jpg';
 import img1 from '@/images/best-computer/img2.jpg';
 import img3 from '@/images/best-computer/img3.jpg';
+import { motion } from 'framer-motion';
+import Image, { type StaticImageData } from 'next/image';
 
 export default function MemberModel({
   img,
@@ -63,7 +63,7 @@ export const MemberModelData = [
   },
 ];
 
-export interface BloodMemberType {
+interface BloodMemberType {
   img: StaticImageData;
   name: string;
   title: string;
