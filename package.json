@@ -55,7 +55,6 @@
     "embla-carousel-react": "^8.6.0",
     "emoji-mart": "^5.6.0",
     "framer-motion": "^11.11.9",
-    "keyv": "^4.5.4",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
@@ -78,12 +77,9 @@
     "react-to-print": "^3.2.0",
     "recharts": "^2.13.3",
     "shadcn": "^4.6.0",
-    "sharp": "^0.33.5",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
-    "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.1.0",
-    "vaul": "^1.1.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
