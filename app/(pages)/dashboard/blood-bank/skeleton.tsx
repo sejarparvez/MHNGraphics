@@ -100,10 +100,10 @@ export function PageSkeleton() {
       <Skeleton className='mx-auto mb-4 h-10 w-1/3' />
       <Skeleton className='mx-auto mb-8 h-4 w-1/4' />
       <div className='mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
-        <Skeleton className='h-10 w-full sm:w-[300px]' />
+        <Skeleton className='h-10 w-full sm:w-75' />
         <div className='flex items-center gap-2'>
-          <Skeleton className='h-10 w-[200px]' />
-          <Skeleton className='h-10 w-[120px]' />
+          <Skeleton className='h-10 w-50' />
+          <Skeleton className='h-10 w-30' />
         </div>
       </div>
       <GridSkeleton />
