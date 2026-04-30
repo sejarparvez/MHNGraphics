@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const SMS_CONFIG = {
+const SMS_CONFIG = {
   // biome-ignore lint/style/noNonNullAssertion: this is fine
   apiKey: process.env.BULKSMS_API_KEY!,
   // biome-ignore lint/style/noNonNullAssertion: this is fine

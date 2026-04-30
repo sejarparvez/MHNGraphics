@@ -65,7 +65,6 @@
         "emoji-mart": "^5.6.0",
         "framer-motion": "^11.11.9",
         "keyv": "^4.5.4",
-        "lodash": "^4.17.23",
         "lodash.debounce": "^4.0.8",
         "lucide-react": "^0.563.0",
         "next": "16.1.6",

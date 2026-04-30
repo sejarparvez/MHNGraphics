@@ -13,7 +13,7 @@ declare module '@tiptap/core' {
   }
 }
 
-export interface LinkEditorStorage {
+interface LinkEditorStorage {
   mode: number; // 0: hidden, 1: update, -1: create
   tempPos: Selection | null;
 }

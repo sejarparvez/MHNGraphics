@@ -1,6 +1,6 @@
 import { mergeAttributes, Node } from '@tiptap/core';
 
-export interface YoutubeOptions {
+interface YoutubeOptions {
   allowFullscreen?: boolean;
   autoplay?: boolean;
   nocookie?: boolean;

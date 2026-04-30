@@ -14,7 +14,7 @@ export type TiptapEditorRef = {
   getInstance: () => Editor | null;
 };
 
-export interface TiptapEditorProps {
+interface TiptapEditorProps {
   ssr?: boolean;
   readonly?: boolean;
   disabled?: boolean;

@@ -1,4 +1,4 @@
-export type designCategory = {
+type designCategory = {
   value: string;
   label: string;
 };
