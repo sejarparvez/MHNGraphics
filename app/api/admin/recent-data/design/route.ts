@@ -1,10 +1,13 @@
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@/components/helper/prisma/Prisma';
+import { requireAuth } from '@/lib/auth';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const authError = await requireAuth(req, ['ADMIN']);
+  if (authError) return authError;
+
   try {
-    // Fetch the latest 5 applications from the database
-    const applications = await Prisma.design.findMany({
+    const designs = await Prisma.design.findMany({
       orderBy: {
         createdAt: 'desc',
       },
@@ -17,10 +20,9 @@ export async function GET() {
       take: 5,
     });
 
-    // Return the applications as a JSON response
-    return new NextResponse(JSON.stringify(applications), { status: 200 });
+    return new NextResponse(JSON.stringify(designs), { status: 200 });
     // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse('Failed to fetch applications', { status: 500 });
+    return new NextResponse('Failed to fetch designs', { status: 500 });
   }
 }

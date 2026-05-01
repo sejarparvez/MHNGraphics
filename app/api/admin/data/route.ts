@@ -1,9 +1,12 @@
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@/components/helper/prisma/Prisma';
+import { requireAuth } from '@/lib/auth';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const authError = await requireAuth(req, ['ADMIN']);
+  if (authError) return authError;
+
   try {
-    // Fetch counts from the database
     const designCount = await Prisma.design.count();
     const subscriberCount = await Prisma.subscriber.count();
     const commentsCount = await Prisma.comment.count();
@@ -18,7 +21,6 @@ export async function GET() {
       applicationCount,
     };
 
-    // Return counts as JSON response
     return new NextResponse(JSON.stringify(data));
     // biome-ignore lint: error
   } catch (error) {

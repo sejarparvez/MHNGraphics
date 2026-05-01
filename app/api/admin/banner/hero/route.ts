@@ -1,8 +1,12 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { UploadImage } from '@/components/helper/image/UploadImage';
+import { requireAuth } from '@/lib/auth';
 import Prisma from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
+  const authError = await requireAuth(req, ['ADMIN']);
+  if (authError) return authError;
+
   try {
     const formData = await req.formData();
 

@@ -1,7 +1,11 @@
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@/components/helper/prisma/Prisma';
+import { requireAuth } from '@/lib/auth';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  const authError = await requireAuth(request, ['ADMIN']);
+  if (authError) return authError;
+
   try {
     // Extract query parameters
     const url = new URL(request.url);

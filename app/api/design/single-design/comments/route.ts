@@ -6,14 +6,17 @@ const secret = process.env.NEXTAUTH_SECRET;
 
 export async function POST(req: NextRequest) {
   try {
-    // Parse the JSON data from the request
-    const body = await req.json();
-    const { comment, userId, designId } = body;
+    const token = await getToken({ req, secret });
+    if (!token) {
+      return new NextResponse('You are not authenticated', { status: 401 });
+    }
 
-    // Validate the required fields
-    if (!comment || !userId || !designId) {
+    const body = await req.json();
+    const { comment, designId } = body;
+
+    if (!comment || !designId) {
       return NextResponse.json(
-        { message: 'Missing required fields: comment, userId, or designId' },
+        { message: 'Missing required fields: comment or designId' },
         { status: 400 },
       );
     }
@@ -21,7 +24,7 @@ export async function POST(req: NextRequest) {
     await Prisma.comment.create({
       data: {
         content: comment,
-        userId: userId,
+        userId: token.id as string,
         designId: designId,
       },
     });

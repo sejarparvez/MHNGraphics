@@ -76,7 +76,6 @@ export function Comments({
 
     const payload = {
       comment: CommentData.comment,
-      userId: session.user.id,
       designId: data.id,
     };
 

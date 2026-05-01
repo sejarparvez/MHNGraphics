@@ -2,6 +2,24 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@/components/helper/prisma/Prisma';
 import { deletePDF, UploadPDF } from '@/utils/cloudinary';
 
+const ALLOWED_ORIGINS = ['https://www.training.oylkka.com'];
+
+function corsHeaders(origin: string | null): Record<string, string> | null {
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    return {
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    };
+  }
+  return null;
+}
+
+export async function OPTIONS(req: NextRequest) {
+  const headers = corsHeaders(req.headers.get('origin'));
+  return new NextResponse(null, { status: 204, headers: headers || undefined });
+}
+
 // POST: Upload a PDF and save a new Notice record
 export async function POST(req: NextRequest) {
   try {
@@ -73,9 +91,7 @@ export async function GET(req: NextRequest) {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          // Allow any origin to access this GET request
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+          ...(corsHeaders(req.headers.get('origin')) ?? {}),
         },
       },
     );

@@ -10,10 +10,26 @@ const contactSchema = z.object({
   message: z.string().min(1, 'Message is required'),
 });
 
+// Escapes user input before embedding in HTML to prevent injection attacks
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { username, email, phoneNumber, message } = contactSchema.parse(body);
+
+    // Sanitize all user-controlled values before using in HTML
+    const safeUsername = escapeHtml(username);
+    const safeEmail = escapeHtml(email);
+    const safePhoneNumber = phoneNumber ? escapeHtml(phoneNumber) : undefined;
+    const safeMessage = escapeHtml(message);
 
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_SERVER,
@@ -67,11 +83,11 @@ export async function POST(req: NextRequest) {
                             <table role="presentation" style="width: 100%; border-collapse: separate; border-spacing: 0 12px;">
                                 <tr>
                                     <td style="padding: 16px; background-color: #f3f4f6; border-radius: 6px;">
-                                        <p style="margin: 0 0 8px 0;"><strong style="color: #4f46e5; font-weight: 600;">Name:</strong> ${username}</p>
-                                        <p style="margin: 0 0 8px 0;"><strong style="color: #4f46e5; font-weight: 600;">Email:</strong> ${email}</p>
-                                        ${phoneNumber ? `<p style="margin: 0 0 8px 0;"><strong style="color: #4f46e5; font-weight: 600;">Phone Number:</strong> ${phoneNumber}</p>` : ''}
+                                        <p style="margin: 0 0 8px 0;"><strong style="color: #4f46e5; font-weight: 600;">Name:</strong> ${safeUsername}</p>
+                                        <p style="margin: 0 0 8px 0;"><strong style="color: #4f46e5; font-weight: 600;">Email:</strong> ${safeEmail}</p>
+                                        ${safePhoneNumber ? `<p style="margin: 0 0 8px 0;"><strong style="color: #4f46e5; font-weight: 600;">Phone Number:</strong> ${safePhoneNumber}</p>` : ''}
                                         <p style="margin: 0 0 8px 0;"><strong style="color: #4f46e5; font-weight: 600;">Message:</strong></p>
-                                        <p style="margin: 0; padding: 12px; background-color: #ffffff; border-radius: 4px; border-left: 4px solid #4f46e5;">${message}</p>
+                                        <p style="margin: 0; padding: 12px; background-color: #ffffff; border-radius: 4px; border-left: 4px solid #4f46e5;">${safeMessage}</p>
                                     </td>
                                 </tr>
                             </table>

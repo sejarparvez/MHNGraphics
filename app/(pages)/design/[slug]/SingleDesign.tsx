@@ -1,5 +1,6 @@
 'use client';
 
+import DOMPurify from 'isomorphic-dompurify';
 import { AlertCircle, Info, Maximize2, X, ZoomIn, ZoomOut } from 'lucide-react';
 import Image from 'next/image';
 import type React from 'react';
@@ -239,7 +240,7 @@ export default function SingleDesign(props: { params: Params }) {
                   >
                     <ZoomOut className='h-6 w-6' />
                   </button>
-                  <span className='min-w-[60px] text-center text-sm font-medium text-white'>
+                  <span className='min-w-15 text-center text-sm font-medium text-white'>
                     {Math.round(zoomLevel * 100)}%
                   </span>
                   <button
@@ -353,8 +354,10 @@ export default function SingleDesign(props: { params: Params }) {
                   <CardContent className='p-6'>
                     <div
                       className='prose max-w-none dark:prose-invert'
-                      // biome-ignore lint: error
-                      dangerouslySetInnerHTML={{ __html: description || '' }}
+                      // biome-ignore lint/security/noDangerouslySetInnerHtml: this is fine
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(description || ''),
+                      }}
                     />
                   </CardContent>
                 </Card>

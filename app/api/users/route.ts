@@ -1,8 +1,12 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@/components/helper/prisma/Prisma';
+import { requireAuth } from '@/lib/auth';
 import cloudinary from '@/utils/cloudinary';
 
 export async function GET(req: NextRequest) {
+  const authError = await requireAuth(req, ['ADMIN']);
+  if (authError) return authError;
+
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
@@ -73,6 +77,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  const authError = await requireAuth(req, ['ADMIN']);
+  if (authError) return authError;
+
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);

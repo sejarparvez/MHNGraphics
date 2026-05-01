@@ -428,27 +428,69 @@ export async function PATCH(req: NextRequest) {
       imageId = imageUrl.public_id;
     }
 
-    // Prepare updated data
+    // Whitelist of fields that can be updated by the student (PATCH)
+    // These match exactly what the frontend form sends
+    const ALLOWED_FIELDS = [
+      'studentName',
+      'fatherName',
+      'motherName',
+      'fatherOccupation',
+      'birthDay',
+      'mobileNumber',
+      'guardianNumber',
+      'gender',
+      'maritalStatus',
+      'bloodGroup',
+      'religion',
+      'nationality',
+      'nid',
+      'email',
+      'fullAddress',
+      'district',
+      'education',
+      'board',
+      'rollNumber',
+      'regNumber',
+      'passingYear',
+      'gpa',
+      'course',
+      'session',
+      'duration',
+      'pc',
+      'transactionId',
+    ];
+
+    const ADMIN_ONLY_FIELDS = ['editable'];
+
+    // Prepare updated data from whitelisted fields only
     const updatedData: Record<string, string | number | Date | boolean | null> =
       {};
 
     formData.forEach((value, key) => {
-      if (key !== 'id' && key !== 'image' && key !== 'deletedImage') {
-        if (key === 'session') {
-          const intValue = parseInt(value.toString(), 10);
-          if (Number.isNaN(intValue)) {
-            throw new Error(`Invalid session value: ${value}`);
-          }
-          updatedData[key] = intValue;
-        } else if (key === 'editable') {
-          updatedData[key] = value === 'true';
-        } else {
-          updatedData[key] = value.toString();
+      const isAllowed = ALLOWED_FIELDS.includes(key);
+      const isAdminOnly = ADMIN_ONLY_FIELDS.includes(key);
+
+      if (!isAllowed && !isAdminOnly) return;
+      if (isAdminOnly && role !== 'ADMIN') return;
+
+      if (key === 'session') {
+        const intValue = parseInt(value.toString(), 10);
+        if (Number.isNaN(intValue)) {
+          throw new Error(`Invalid session value: ${value}`);
         }
+        updatedData.session = intValue;
+      } else if (key === 'birthDay') {
+        const date = new Date(value.toString());
+        if (Number.isNaN(date.getTime())) {
+          throw new Error(`Invalid birth date: ${value}`);
+        }
+        updatedData.birthDay = date;
+      } else {
+        updatedData[key] = value.toString();
       }
     });
 
-    // Add image and imageId to updatedData
+    // Add image fields
     updatedData.image = image;
     updatedData.imageId = imageId;
 

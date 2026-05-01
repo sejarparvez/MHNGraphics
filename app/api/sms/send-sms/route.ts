@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth';
 import { sendSMS } from '@/lib/sms';
 
 export async function POST(req: NextRequest) {
+  const authError = await requireAuth(req, ['ADMIN']);
+  if (authError) return authError;
+
   const { phone, message } = await req.json();
 
   if (!phone || !message) {
