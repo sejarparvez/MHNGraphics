@@ -1,6 +1,7 @@
 {
   "name": "Oylkka It",
   "version": "0.1.1",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -10,7 +11,8 @@
     "format": "biome format . --write",
     "fix": "biome lint . --write",
     "check": "biome check . --write",
-    "knip": "knip"
+    "knip": "knip",
+    "find-unused-assets": "bun scripts/find-unused-assets.js"
   },
   "dependencies": {
     "@emoji-mart/data": "^1.2.1",

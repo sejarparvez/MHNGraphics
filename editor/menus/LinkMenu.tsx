@@ -92,13 +92,6 @@ const LinkMenu = () => {
 
 export default memo(LinkMenu);
 
-import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import {
   TbCheck,
   TbCopy,
@@ -106,6 +99,13 @@ import {
   TbExternalLink,
   TbLinkOff,
 } from 'react-icons/tb';
+import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import useCopyToClipboard from '../hooks/useCopyToClipboard';
 
 interface LinkViewProps {
@@ -189,9 +189,9 @@ const LinkView = ({ url, onEdit, onRemove }: LinkViewProps) => {
   );
 };
 
+import { useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useEffect } from 'react';
 
 interface LinkEditProps {
   initialUrl?: string;
