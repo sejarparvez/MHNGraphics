@@ -18,7 +18,7 @@ interface LinkEditorStorage {
   tempPos: Selection | null;
 }
 
-export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
+const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
   inclusive: false,
 
   addOptions() {

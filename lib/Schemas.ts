@@ -202,4 +202,4 @@ export const ApplicationSchema = z.object({
     ),
 });
 
-export type ApplicationSchemaType = z.infer<typeof ApplicationSchema>;
+// export type ApplicationSchemaType = z.infer<typeof ApplicationSchema>;

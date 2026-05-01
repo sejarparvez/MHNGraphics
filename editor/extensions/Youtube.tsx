@@ -126,7 +126,7 @@ export const Youtube = Node.create<YoutubeOptions>({
 const YOUTUBE_REGEX =
   /^(https?:\/\/)?(www\.|music\.)?(youtube\.com|youtu\.be|youtube-nocookie\.com)\/(?!channel\/)(?!@)(.+)?$/;
 
-export function isValidYoutubeUrl(url: string) {
+function isValidYoutubeUrl(url: string) {
   return url.match(YOUTUBE_REGEX);
 }
 
@@ -138,7 +138,7 @@ type GetEmbedYoutubeUrlOptions = {
   controls?: boolean;
 };
 
-export function getEmbedYoutubeUrl({
+function getEmbedYoutubeUrl({
   url,
   nocookie,
   allowFullscreen,

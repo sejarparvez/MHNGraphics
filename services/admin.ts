@@ -84,32 +84,6 @@ export function useUserStatusUpdate() {
   });
 }
 
-export const useUpdateDesignStatus = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const updatePromise = axios
-        .patch<{
-          message: string;
-        }>(`/api/design/single-design?id=${id}`, { status })
-        .then((res) => res.data); // Unwrap response before passing to toast
-
-      return toast.promise(updatePromise, {
-        loading: 'Updating design status...',
-        success: (data) => {
-          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ALL_DESIGN] });
-          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_DESIGN] });
-          return data.message || 'Design updated successfully 🎉';
-        },
-        error: (error) =>
-          axios.isAxiosError(error)
-            ? error.response?.data?.message || 'Failed to update design ❌'
-            : 'Something went wrong. Please try again.',
-      });
-    },
-  });
-};
 export function useDeleteUser() {
   const queryClient = useQueryClient();
 

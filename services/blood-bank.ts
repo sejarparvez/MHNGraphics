@@ -8,7 +8,7 @@ import type { BloodBankData, BloodBankQuery, Donor } from '@/utils/Interface';
 
 const API_ENDPOINT = '/api/best-computer/blood-bank';
 
-export const BloodBankService = {
+const BloodBankService = {
   fetchDonors: async ({
     currentPage,
     search,

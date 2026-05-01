@@ -4,7 +4,7 @@ import { memo, useCallback, useRef, useState } from 'react';
 import { BubbleMenu } from '../BubbleMenu';
 import { useTiptapContext } from '../Provider';
 
-export const LinkMenu = () => {
+const LinkMenu = () => {
   const { editor, contentElement } = useTiptapContext();
   const [isEditing, setIsEditing] = useState(false);
   const mode = useRef<number>(0);
@@ -92,13 +92,6 @@ export const LinkMenu = () => {
 
 export default memo(LinkMenu);
 
-import {
-  TbCheck,
-  TbCopy,
-  TbEdit,
-  TbExternalLink,
-  TbLinkOff,
-} from 'react-icons/tb';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -106,6 +99,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  TbCheck,
+  TbCopy,
+  TbEdit,
+  TbExternalLink,
+  TbLinkOff,
+} from 'react-icons/tb';
 import useCopyToClipboard from '../hooks/useCopyToClipboard';
 
 interface LinkViewProps {
@@ -189,9 +189,9 @@ const LinkView = ({ url, onEdit, onRemove }: LinkViewProps) => {
   );
 };
 
-import { useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useEffect } from 'react';
 
 interface LinkEditProps {
   initialUrl?: string;

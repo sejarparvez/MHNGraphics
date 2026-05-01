@@ -33,7 +33,7 @@ type TiptapProviderProps = {
   children?: ReactNode;
 };
 
-export const TiptapProvider = ({
+const TiptapProvider = ({
   children,
   editorOptions,
   slotBefore,
