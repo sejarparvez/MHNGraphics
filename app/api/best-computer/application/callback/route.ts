@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { Prisma } from '@/components/helper/prisma/Prisma';
 import { bkashConfig } from '@/lib/bkash';
+import Prisma from '@/lib/prisma';
 import { executePayment, queryPayment } from '@/services/bkash';
 import cloudinary from '@/utils/cloudinary';
 

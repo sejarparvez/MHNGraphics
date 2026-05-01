@@ -5,8 +5,8 @@ const SMS_CONFIG = {
   apiKey: process.env.BULKSMS_API_KEY!,
   // biome-ignore lint/style/noNonNullAssertion: this is fine
   senderId: process.env.BULKSMS_SENDER_ID!,
-  baseUrl: 'http://bulksmsbd.net/api/smsapi',
-  balanceUrl: 'http://bulksmsbd.net/api/getBalanceApi',
+  baseUrl: 'https://bulksmsbd.net/api/smsapi',
+  balanceUrl: 'https://bulksmsbd.net/api/getBalanceApi',
 } as const;
 
 export async function sendSMS(phone: string, message: string) {

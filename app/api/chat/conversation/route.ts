@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { Prisma } from '@/components/helper/prisma/Prisma';
+import Prisma from '@/lib/prisma';
 import { authOptions } from '../../auth/[...nextauth]/Options';
 import type { CustomSession } from '../../profile/route';
 

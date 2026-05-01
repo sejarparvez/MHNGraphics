@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { Prisma } from '@/components/helper/prisma/Prisma';
+import Prisma from '@/lib/prisma';
 import { cleanupAllPendingApplications } from '@/utils/applicationCleanup';
 
 export async function GET() {

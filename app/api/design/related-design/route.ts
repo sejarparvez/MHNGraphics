@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { Prisma } from '@/components/helper/prisma/Prisma';
+import Prisma from '@/lib/prisma';
 
 const SCORE_WEIGHTS = {
   TAG_MATCH: 3,

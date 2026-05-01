@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { Prisma } from '@/components/helper/prisma/Prisma';
+import Prisma from '@/lib/prisma';
 import { deletePDF, UploadPDF } from '@/utils/cloudinary';
 
 const ALLOWED_ORIGINS = ['https://www.training.oylkka.com'];

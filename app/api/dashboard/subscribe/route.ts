@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { sendWelcomeEmail } from '@/components/helper/mail/SendMail';
-import { Prisma } from '@/components/helper/prisma/Prisma';
+import Prisma from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
   try {

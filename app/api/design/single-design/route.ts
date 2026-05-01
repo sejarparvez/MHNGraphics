@@ -3,7 +3,7 @@ import type { Session } from 'next-auth';
 import { getToken } from 'next-auth/jwt';
 import { getServerSession } from 'next-auth/next';
 import { UploadImage } from '@/components/helper/image/UploadImage';
-import { Prisma } from '@/components/helper/prisma/Prisma';
+import Prisma from '@/lib/prisma';
 import cloudinary from '@/utils/cloudinary';
 import { authOptions } from '../../auth/[...nextauth]/Options';
 

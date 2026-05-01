@@ -1,7 +1,7 @@
 import type { DesignStatus } from '@prisma/client';
 import { type NextRequest, NextResponse } from 'next/server';
-import { Prisma } from '@/components/helper/prisma/Prisma';
 import { SlugToText } from '@/components/helper/slug/SlugToText';
+import Prisma from '@/lib/prisma';
 
 // Helper function to normalize text to lowercase
 const normalizeText = (text: string) => text.trim().toLowerCase();

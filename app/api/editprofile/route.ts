@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { type NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { UploadImage } from '@/components/helper/image/UploadImage';
-import { Prisma } from '@/components/helper/prisma/Prisma';
+import Prisma from '@/lib/prisma';
 import cloudinary from '@/utils/cloudinary';
 
 const secret = process.env.NEXTAUTH_SECRET;

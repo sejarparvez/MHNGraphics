@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { Prisma } from '@/components/helper/prisma/Prisma';
 import { requireAuth } from '@/lib/auth';
+import Prisma from '@/lib/prisma';
 import cloudinary from '@/utils/cloudinary';
 
 export async function GET(req: NextRequest) {

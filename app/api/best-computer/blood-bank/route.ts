@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { UploadImage } from '@/components/helper/image/UploadImage';
-import { Prisma } from '@/components/helper/prisma/Prisma';
+import Prisma from '@/lib/prisma';
 import cloudinary from '@/utils/cloudinary';
 import { authOptions } from '../../auth/[...nextauth]/Options';
 import type { CustomSession } from '../../profile/route';

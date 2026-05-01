@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { UploadImage } from '@/components/helper/image/UploadImage';
-import { Prisma } from '@/components/helper/prisma/Prisma';
 import { bkashConfig } from '@/lib/bkash';
+import Prisma from '@/lib/prisma';
 import { sendSMS } from '@/lib/sms';
 import { createPayment } from '@/services/bkash';
 import { cleanupUserPendingApplications } from '@/utils/applicationCleanup';

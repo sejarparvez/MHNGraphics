@@ -1,7 +1,7 @@
 'use server';
 
 import axios, { type AxiosError } from 'axios';
-import { Prisma } from '@/components/helper/prisma/Prisma';
+import Prisma from '@/lib/prisma';
 
 interface BkashConfig {
   base_url?: string;

@@ -18,6 +18,7 @@
 - [x] **HTML Injection in Contact Email** — Escaped with `escapeHtml()` + Zod validation
 - [x] **`userId` from Request Body (Comment Forgery)** — Derived from session token
 - [x] **Mass Assignment in Application PATCH** — Field whitelist added, admin-only fields separated
+- [x] **SMS API Uses HTTP** — Switched to HTTPS in `lib/sms.ts`
 
 ---
 
@@ -62,20 +63,6 @@ No rate limiting on: signup, login, quiz submission, SMS sending, email contact 
 **Risk:** Brute force, DoS, spam, resource exhaustion.
 
 **Fix:** Add rate limiting (e.g., `@upstash/ratelimit` or `express-rate-limit` adapted for Next.js).
-
----
-
-### 4. SMS API Uses HTTP Not HTTPS
-**File:** `lib/sms.ts:8-9`
-
-```ts
-baseUrl: 'http://bulksmsbd.net/api/smsapi',
-balanceUrl: 'http://bulksmsbd.net/api/getBalanceApi',
-```
-
-API key is sent over HTTP in query parameters — visible in URLs, server logs, and network sniffing.
-
-**Fix:** Switch to HTTPS or use a provider with HTTPS support.
 
 ---
 
@@ -145,7 +132,6 @@ Using `compareSync` blocks the event loop during authentication.
 
 ## Priority Remediation Order
 
-1. Switch SMS API to HTTPS
-2. Add rate limiting to auth, signup, SMS, contact, quiz
-3. Consolidate Prisma client into a single singleton
-4. Add CSRF protection to state-changing custom API routes
+1. Add rate limiting to auth, signup, SMS, contact, quiz
+2. Consolidate Prisma client into a single singleton
+3. Add CSRF protection to state-changing custom API routes

@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { UploadImage } from '@/components/helper/image/UploadImage';
-import { Prisma } from '@/components/helper/prisma/Prisma';
+import Prisma from '@/lib/prisma';
 import cloudinary from '@/utils/cloudinary';
 
 // Helper function to get string value from form data
