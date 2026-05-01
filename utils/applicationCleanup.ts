@@ -28,7 +28,7 @@ interface CleanupResult {
  * @param options - Configuration options for cleanup
  * @returns Promise<CleanupResult>
  */
-export async function cleanupPendingApplications(
+async function cleanupPendingApplications(
   options: CleanupOptions = {},
 ): Promise<CleanupResult> {
   const {
@@ -216,19 +216,5 @@ export async function cleanupAllPendingApplications(
   return cleanupPendingApplications({
     minutesThreshold,
     includeImageCleanup: true,
-  });
-}
-
-/**
- * Preview what would be deleted without actually deleting
- */
-export async function previewPendingCleanup(
-  userId?: string,
-  minutesThreshold: number = 3,
-): Promise<CleanupResult> {
-  return cleanupPendingApplications({
-    userId,
-    minutesThreshold,
-    dryRun: true,
   });
 }

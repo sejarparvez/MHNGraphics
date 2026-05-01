@@ -59,15 +59,3 @@ export function getTransformedImageUrl(
     `/upload/h_${height},w_${width},c_limit,fl_attachment/w_180,o_30,l_watermark,g_center/`,
   );
 }
-
-/**
- * This TypeScript function calculates the aspect ratio by dividing the width by the height.
- * @param {number} width - The `width` parameter represents the width of an element, such as an image
- * or a video.
- * @param {number} height - The height parameter represents the vertical dimension of an element, such
- * as an image or a video. It is typically measured in pixels or another unit of length.
- * @returns The aspect ratio, which is calculated by dividing the width by the height.
- */
-export function getAspectRatio(width: number, height: number): number {
-  return width / height;
-}
