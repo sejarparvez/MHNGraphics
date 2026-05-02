@@ -2,10 +2,14 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 const secret = process.env.NEXTAUTH_SECRET;
 
 export async function POST(req: NextRequest) {
+  const limit = await checkRateLimit(req, 10, '1 h', 'quiz-submit');
+  if (limit) return limit;
+
   try {
     const csrfError = validateCsrf(req);
     if (csrfError) return csrfError;

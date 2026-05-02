@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { z } from 'zod';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 // Define a schema for input validation
 const contactSchema = z.object({
@@ -21,6 +22,9 @@ function escapeHtml(value: string): string {
 }
 
 export async function POST(req: NextRequest) {
+  const limit = await checkRateLimit(req, 3, '1 h', 'contact');
+  if (limit) return limit;
+
   try {
     const body = await req.json();
     const { username, email, phoneNumber, message } = contactSchema.parse(body);

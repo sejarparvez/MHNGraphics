@@ -45,6 +45,8 @@
     "@tiptap/pm": "^2.11.5",
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.37.0",
     "ably": "^2.17.1",
     "axios": "^1.13.4",
     "bcrypt": "^5.1.1",

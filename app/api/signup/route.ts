@@ -6,9 +6,13 @@ import sendVerificationEmail, {
   sendRegistrationEmail,
 } from '@/components/helper/mail/SendMail';
 import Prisma from '@/lib/prisma';
+import { checkRateLimit } from '@/lib/rate-limit';
 import { SignUpSchema } from '@/lib/Schemas';
 
 export async function POST(req: NextRequest) {
+  const limit = await checkRateLimit(req, 3, '1 h', 'signup');
+  if (limit) return limit;
+
   try {
     const data = await req.json();
     const { name, email, password } = data;
@@ -140,6 +144,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
+  const limit = await checkRateLimit(req, 5, '1 h', 'verify-email');
+  if (limit) return limit;
+
   try {
     const data = await req.json();
     const { userId, code } = data;

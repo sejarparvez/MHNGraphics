@@ -2,9 +2,13 @@ import axios from 'axios';
 import { type NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
 import { validateCsrf } from '@/lib/csrf';
+import { checkRateLimit } from '@/lib/rate-limit';
 import { sendSMS } from '@/lib/sms';
 
 export async function POST(req: NextRequest) {
+  const limit = await checkRateLimit(req, 10, '1 d', 'sms');
+  if (limit) return limit;
+
   const authError = await requireAuth(req, ['ADMIN']);
   if (authError) return authError;
 

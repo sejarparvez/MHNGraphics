@@ -4,6 +4,7 @@ import { UploadImage } from '@/components/helper/image/UploadImage';
 import { bkashConfig } from '@/lib/bkash';
 import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
+import { checkRateLimit } from '@/lib/rate-limit';
 import { sendSMS } from '@/lib/sms';
 import { createPayment } from '@/services/bkash';
 import { cleanupUserPendingApplications } from '@/utils/applicationCleanup';
@@ -29,6 +30,9 @@ const getNumberValue = (formData: FormData, key: string): number | null => {
 
 export async function POST(req: NextRequest) {
   try {
+    const limit = await checkRateLimit(req, 3, '1 d', 'application');
+    if (limit) return limit;
+
     const csrfError = validateCsrf(req);
     if (csrfError) return csrfError;
 

@@ -1,7 +1,11 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import Prisma from '@/lib/prisma';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
+  const limit = await checkRateLimit(req, 30, '1 m', 'like');
+  if (limit) return limit;
+
   try {
     const body = await req.json();
     const { postId, userId } = body;

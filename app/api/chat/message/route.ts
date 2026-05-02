@@ -4,6 +4,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/Options';
 import { AblyService } from '@/lib/ably';
 import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 interface CustomSession extends Session {
   user: {
@@ -131,6 +132,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const limit = await checkRateLimit(req, 30, '1 h', 'chat-message');
+  if (limit) return limit;
+
   try {
     const csrfError = validateCsrf(req);
     if (csrfError) return csrfError;
