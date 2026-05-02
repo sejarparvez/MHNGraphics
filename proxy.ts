@@ -20,7 +20,7 @@ const authRatelimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(5, '1 m'),
 });
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for') || 'unknown';
   const pathname = new URL(request.url).pathname;
 

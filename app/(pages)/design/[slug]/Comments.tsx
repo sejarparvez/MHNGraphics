@@ -113,13 +113,13 @@ export function Comments({
     <Card id='comment'>
       <CardHeader className='flex flex-row items-center justify-between border-b'>
         <CardTitle>Comments</CardTitle>
-        <div className='flex items-center space-x-2 rounded-full bg-zinc-100/80 px-3 py-1'>
+        <div className='flex items-center space-x-2 rounded-full bg-secondary px-3 py-1'>
           <MessageCircle size={18} />
           <span className='font-medium'>{data.commentsCount}</span>
         </div>
       </CardHeader>
       <CardContent className='p-0'>
-        <ScrollArea className='max-h-[500px]'>
+        <ScrollArea className='max-h-125'>
           <div className='space-y-0 divide-y divide-zinc-200/40 dark:divide-zinc-800/40'>
             {data.comments.length === 0 ? (
               <div className='flex flex-col items-center justify-center py-12 text-center'>

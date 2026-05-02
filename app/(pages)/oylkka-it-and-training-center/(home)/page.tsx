@@ -1,5 +1,6 @@
 import Footer from '@/components/layout/footer/Footer';
 import Header from '@/components/layout/Header/Header';
+import Hero from '../../(home)/Hero';
 import Courses from './Course';
 import FeedBack from './FeedBack';
 import Gallery from './Gallery';
@@ -9,7 +10,6 @@ import Notice from './Notice';
 import Payment from './Payment';
 import ScrollNotice from './ScrollNotice';
 import Services from './Service';
-import { Slider } from './Slider';
 import WorkPlace from './WarkPlace';
 import WhyUs from './WhyUs';
 
@@ -18,7 +18,7 @@ export default function page() {
     <>
       <Header fixed best />
       <div className='overflow-x-clip'>
-        <Slider />
+        <Hero />
         <ScrollNotice />
         <Notice />
         <Courses />
@@ -26,10 +26,8 @@ export default function page() {
         <WhyUs />
         <Insights />
         <Members />
-        <div className='mx-2 my-16 grid grid-cols-1 gap-10 md:mx-24 md:grid-cols-2 md:gap-20'>
-          <FeedBack />
-          <Gallery />
-        </div>
+        <FeedBack />
+        <Gallery />
         <WorkPlace />
         <Payment />
       </div>

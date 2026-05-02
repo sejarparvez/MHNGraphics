@@ -80,7 +80,7 @@ export function DesignDetails({
 
   return (
     <>
-      <div className='mb-6 rounded-lg border border-emerald-200/50 bg-emerald-50/50 p-4 backdrop-blur-xs'>
+      <div className='mb-6 rounded-lg border border-emerald-200/50 bg-emerald-50/50 dark:bg-emerald-900/50 p-4 backdrop-blur-xs'>
         <p className='flex flex-wrap items-center gap-2 text-sm text-emerald-800 dark:text-emerald-300'>
           <CircleCheckBig className='h-5 w-5 text-emerald-500' />
           <span>Free for use under the Oylkka </span>
