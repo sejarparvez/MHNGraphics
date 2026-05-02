@@ -3,6 +3,7 @@ import type { Session } from 'next-auth';
 import { getToken } from 'next-auth/jwt';
 import { getServerSession } from 'next-auth/next';
 import { UploadImage } from '@/components/helper/image/UploadImage';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
 import cloudinary from '@/utils/cloudinary';
 import { authOptions } from '../../auth/[...nextauth]/Options';
@@ -25,6 +26,9 @@ const secret = process.env.NEXTAUTH_SECRET;
 
 export async function POST(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const session = (await getServerSession(authOptions)) as CustomSession;
 
     if (!session) {
@@ -141,6 +145,9 @@ export async function GET(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const token = await getToken({ req, secret });
 
     if (!token) {
@@ -179,7 +186,7 @@ export async function DELETE(req: NextRequest) {
     if (product.imageId) {
       const result = await cloudinary.uploader.destroy(product.imageId);
       if (result.result !== 'ok') {
-        return new NextResponse('error', { status: 400 });
+        return new NextResponse('Image upload failed', { status: 400 });
       }
     }
 
@@ -197,6 +204,9 @@ export async function DELETE(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const csrfError = validateCsrf(req);
+  if (csrfError) return csrfError;
+
   // Get session
   const session = (await getServerSession(authOptions)) as CustomSession;
 

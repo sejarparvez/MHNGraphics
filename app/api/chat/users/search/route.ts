@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/Options';
 import type { CustomSession } from '@/app/api/profile/route';
 import Prisma from '@/lib/prisma';
+import { getServerSession } from 'next-auth/next';
+import { type NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
     if (!session?.user?.id) {

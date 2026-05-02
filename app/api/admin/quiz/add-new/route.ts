@@ -1,6 +1,8 @@
-import { NextResponse } from 'next/server';
-import { z } from 'zod';
+import { requireAuth } from '@/lib/auth';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
+import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 const OptionSchema = z.object({
   text: z.string().min(1, 'Option text is required'),
@@ -37,7 +39,13 @@ const QuizCreateSchema = z.object({
     .min(1, 'At least one question is required'),
 });
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const authError = await requireAuth(req, ['ADMIN']);
+  if (authError) return authError;
+
+  const csrfError = validateCsrf(req);
+  if (csrfError) return csrfError;
+
   try {
     const body = await req.json();
     const validation = QuizCreateSchema.safeParse(body);

@@ -1,9 +1,17 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: this is fine */
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
 
 export async function PUT(req: NextRequest) {
+  const authError = await requireAuth(req, ['ADMIN']);
+  if (authError) return authError;
+
+  const csrfError = validateCsrf(req);
+  if (csrfError) return csrfError;
+
   try {
     const quizData = await req.json();
     const { id, questions, ...rest } = quizData;
@@ -90,6 +98,12 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  const authError = await requireAuth(req, ['ADMIN']);
+  if (authError) return authError;
+
+  const csrfError = validateCsrf(req);
+  if (csrfError) return csrfError;
+
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);

@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import apiClient from '@/lib/apiClient';
 import type { BloodBankData, BloodBankQuery, Donor } from '@/utils/Interface';
 
 const API_ENDPOINT = '/api/best-computer/blood-bank';
@@ -32,7 +33,7 @@ const BloodBankService = {
 
   deleteDonor: async (id: string): Promise<void> => {
     try {
-      await axios.delete(`${API_ENDPOINT}?id=${id}`);
+      await apiClient.delete(`${API_ENDPOINT}?id=${id}`);
     } catch (error) {
       // biome-ignore lint: error
       console.error('Error deleting donor:', error);

@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import type { z } from 'zod';
 import { QUERY_KEYS } from '@/constant/QueryKeys';
 import { useDebounce } from '@/hooks/useDebounce';
+import apiClient from '@/lib/apiClient';
 import type { ApplicationSchema } from '@/lib/Schemas';
 
 export const useSubmitApplication = () => {
@@ -27,7 +28,7 @@ export const useSubmitApplication = () => {
         }
       });
 
-      return axios.post('/api/best-computer/application', formData);
+      return apiClient.post('/api/best-computer/application', formData);
     },
 
     onSuccess: (response) => {
@@ -68,7 +69,7 @@ export const useUpdateApplication = (appId: string, refetch: () => void) => {
       Object.entries(updateFields).forEach(([key, value]) => {
         formData.append(key, value);
       });
-      return axios.patch('/api/best-computer/application', formData, {
+      return apiClient.patch('/api/best-computer/application', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     },
@@ -101,7 +102,7 @@ export const useUpdateApplication = (appId: string, refetch: () => void) => {
 export const useDeleteApplication = (appId: string, refetch: () => void) => {
   const mutation = useMutation<AxiosResponse, Error, void>({
     mutationFn: async () => {
-      return axios.delete(`/api/best-computer/application?id=${appId}`);
+      return apiClient.delete(`/api/best-computer/application?id=${appId}`);
     },
     onSuccess: (data) => {
       if (data.status === 200) {

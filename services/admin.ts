@@ -10,6 +10,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { QUERY_KEYS } from '@/constant/QueryKeys';
 import { useDebounce } from '@/hooks/useDebounce';
+import apiClient from '@/lib/apiClient';
 
 export function useFetchAdminData() {
   return useQuery({
@@ -64,7 +65,7 @@ export function useUserStatusUpdate() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const updatePromise = axios
+      const updatePromise = apiClient
         .patch<{ message: string }>(`/api/profile?id=${id}`, {
           status,
         })
@@ -89,7 +90,7 @@ export function useDeleteUser() {
 
   return useMutation({
     mutationFn: async ({ id }: { id: string }) => {
-      const updatePromise = axios
+      const updatePromise = apiClient
         .delete<{ message: string }>(`/api/users?id=${id}`)
         .then((res) => res.data);
 
@@ -136,11 +137,9 @@ export const useDurationToggle = (
 
   const mutation = useMutation({
     mutationFn: async (newData: boolean) => {
-      return axios.patch(
-        'api/admin/duration',
-        { button: newData ? 'On' : 'Off' },
-        { withCredentials: true },
-      );
+      return apiClient.patch('api/admin/duration', {
+        button: newData ? 'On' : 'Off',
+      });
     },
     onSuccess: (_, newData) => {
       queryClient.invalidateQueries({
@@ -182,7 +181,7 @@ export function useDeleteComment() {
 
   return useMutation({
     mutationFn: async ({ id }: { id: string }) => {
-      const updatePromise = axios
+      const updatePromise = apiClient
         .delete<{
           message: string;
         }>(`/api/design/single-design/comments?commentId=${id}`)

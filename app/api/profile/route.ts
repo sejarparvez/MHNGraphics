@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import type { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
 import { authOptions } from '../auth/[...nextauth]/Options';
 
@@ -64,6 +65,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const csrfError = validateCsrf(req);
+  if (csrfError) return csrfError;
+
   const session = (await getServerSession(authOptions)) as CustomSession;
 
   // Check if user is logged in

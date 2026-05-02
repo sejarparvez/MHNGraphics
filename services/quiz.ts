@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import apiClient from '@/lib/apiClient';
 import type { QuizListType } from '@/types/quiz-type';
 
 export type QuizDifficulty = 'EASY' | 'MEDIUM' | 'HARD';
@@ -73,7 +74,7 @@ export function useSubmitQuiz() {
       timeSpent: number;
       tabSwitchCount?: number;
     }) => {
-      const response = await axios.post(`/api/quiz/submit`, {
+      const response = await apiClient.post(`/api/quiz/submit`, {
         quizId,
         answers,
         timeSpent,

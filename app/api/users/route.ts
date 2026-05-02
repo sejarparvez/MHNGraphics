@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
 import cloudinary from '@/utils/cloudinary';
 
@@ -53,7 +54,7 @@ export async function GET(req: NextRequest) {
 
     // Get total count of verified users for pagination metadata
     const totalCount = await Prisma.user.count({
-      // where: whereClause,
+      where: whereClause,
     });
 
     const result = {
@@ -79,6 +80,9 @@ export async function GET(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const authError = await requireAuth(req, ['ADMIN']);
   if (authError) return authError;
+
+  const csrfError = validateCsrf(req);
+  if (csrfError) return csrfError;
 
   try {
     const url = new URL(req.url);

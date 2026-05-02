@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import { type NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { UploadImage } from '@/components/helper/image/UploadImage';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
 import cloudinary from '@/utils/cloudinary';
 
@@ -47,6 +48,9 @@ export async function GET(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const formData = await req.formData();
     const name = formData.get('name')?.toString();
     const bio = formData.get('bio')?.toString();
@@ -77,7 +81,7 @@ export async function PUT(req: NextRequest) {
       if (existingUser.imageId) {
         const result = await cloudinary.uploader.destroy(existingUser.imageId);
         if (result.result !== 'ok') {
-          return new NextResponse('error', { status: 400 });
+          return new NextResponse('Image upload failed', { status: 400 });
         }
       }
 
@@ -108,6 +112,9 @@ export async function PUT(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const data = await req.json();
     const { currentPassword, newPassword } = data;
     if (!currentPassword || !newPassword) {
@@ -128,7 +135,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     // Check if the password is not null before comparing
     if (existingUser.password === null) {
-      return new NextResponse('User password is null', { status: 500 });
+      return new NextResponse('Password change not available', { status: 400 });
     }
 
     const isPasswordValid = await bcrypt.compare(
@@ -152,7 +159,7 @@ export async function PATCH(req: NextRequest) {
     return new NextResponse('Password updated successfully');
     // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse('Error updating password', { status: 500 });
+    return new NextResponse('Password update failed', { status: 500 });
   } finally {
     Prisma.$disconnect();
   }

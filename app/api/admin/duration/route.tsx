@@ -10,7 +10,7 @@ export async function GET() {
     return new NextResponse(JSON.stringify(data));
     // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse('Failed to fetch data', { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   } finally {
     await Prisma.$disconnect();
   }
@@ -40,7 +40,7 @@ export async function PATCH(req: NextRequest) {
     return new NextResponse('Button updated successfully');
     // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse('Failed to update data', { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   } finally {
     await Prisma.$disconnect();
   }

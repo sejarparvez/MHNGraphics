@@ -1,11 +1,15 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
+import { getServerSession } from 'next-auth/next';
+import { type NextRequest, NextResponse } from 'next/server';
 import { authOptions } from '../../auth/[...nextauth]/Options';
 import type { CustomSession } from '../../profile/route';
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const session = (await getServerSession(authOptions)) as CustomSession;
     if (!session?.user?.id) {
       return new NextResponse('Unauthorized', { status: 401 });

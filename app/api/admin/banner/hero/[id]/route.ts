@@ -1,11 +1,19 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
 import cloudinary from '@/utils/cloudinary';
 
 export async function DELETE(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = await requireAuth(req, ['ADMIN']);
+  if (authError) return authError;
+
+  const csrfError = validateCsrf(req);
+  if (csrfError) return csrfError;
+
   try {
     const { id } = await params;
 

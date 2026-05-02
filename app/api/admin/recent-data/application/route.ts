@@ -31,6 +31,6 @@ export async function GET() {
     return new NextResponse(JSON.stringify(applications), { status: 200 });
     // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse('Failed to fetch applications', { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

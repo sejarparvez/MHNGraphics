@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession, type Session } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/Options';
 import { AblyService } from '@/lib/ably';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
 
 interface CustomSession extends Session {
@@ -131,6 +132,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const session = (await getServerSession(authOptions)) as CustomSession;
     if (!session?.user?.id) {
       return new NextResponse('Unauthorized', { status: 401 });

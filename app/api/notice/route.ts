@@ -1,4 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
 import { deletePDF, UploadPDF } from '@/utils/cloudinary';
 
@@ -22,6 +24,12 @@ export async function OPTIONS(req: NextRequest) {
 
 // POST: Upload a PDF and save a new Notice record
 export async function POST(req: NextRequest) {
+  const authError = await requireAuth(req, ['ADMIN']);
+  if (authError) return authError;
+
+  const csrfError = validateCsrf(req);
+  if (csrfError) return csrfError;
+
   try {
     const formData = await req.formData();
     const title = formData.get('title') as string;
@@ -102,6 +110,12 @@ export async function GET(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  const authError = await requireAuth(req, ['ADMIN']);
+  if (authError) return authError;
+
+  const csrfError = validateCsrf(req);
+  if (csrfError) return csrfError;
+
   try {
     // Retrieve the 'id' parameter from the query string.
     const { searchParams } = req.nextUrl;

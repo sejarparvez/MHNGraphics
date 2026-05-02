@@ -3,6 +3,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { QUERY_KEYS } from '@/constant/QueryKeys';
 import { useDebounce } from '@/hooks/useDebounce';
+import apiClient from '@/lib/apiClient';
 import type { NewDesignSchemaType } from '@/lib/Schemas';
 import type { Design } from '@/utils/Interface';
 
@@ -79,7 +80,7 @@ export const useCreateDesign = (resetForm: () => void) => {
   return useMutation({
     mutationFn: async (formData: FormData) => {
       // Create the axios promise.
-      const apiPromise = axios.post('/api/design/single-design', formData, {
+      const apiPromise = apiClient.post('/api/design/single-design', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       // Use toast.promise to show loading, success, and error notifications.
@@ -111,7 +112,7 @@ export const useDeleteDesign = () => {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const deletePromise = axios
+      const deletePromise = apiClient
         .delete<{ message: string }>(`/api/design/single-design?id=${id}`)
         .then((res) => res.data); // Unwrap response before passing to toast
 
@@ -136,7 +137,7 @@ export const useUpdateDesignStatus = () => {
 
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const updatePromise = axios
+      const updatePromise = apiClient
         .patch<{
           message: string;
         }>(`/api/design/single-design?id=${id}`, { status })
@@ -225,7 +226,7 @@ export function useUpdateDesign({ designId, imageFile }: UseUpdateDesignProps) {
         submissionData.append('image', imageFile);
       }
 
-      const response = await axios.patch(
+      const response = await apiClient.patch(
         '/api/design/edit-design',
         submissionData,
         {

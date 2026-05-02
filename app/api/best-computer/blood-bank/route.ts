@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { UploadImage } from '@/components/helper/image/UploadImage';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
 import cloudinary from '@/utils/cloudinary';
 import { authOptions } from '../../auth/[...nextauth]/Options';
@@ -99,7 +100,7 @@ export async function PUT(req: NextRequest) {
     if (imageData && imageId) {
       const deleteResult = await cloudinary.uploader.destroy(imageId);
       if (deleteResult.result !== 'ok') {
-        return new NextResponse('Error deleting previous image', {
+        return new NextResponse('Image delete failed', {
           status: 400,
         });
       }
@@ -233,6 +234,9 @@ export async function GET(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const session = (await getServerSession(authOptions)) as CustomSession;
 
     // Check if the user is logged in

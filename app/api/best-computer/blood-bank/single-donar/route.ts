@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     return new NextResponse(JSON.stringify(response), { status: 200 });
     // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse('Error', { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   } finally {
     Prisma.$disconnect();
   }

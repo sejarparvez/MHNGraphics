@@ -57,7 +57,7 @@ export const authOptions = {
         }
 
         if (user.password) {
-          const passwordMatch = bcrypt.compareSync(
+          const passwordMatch = bcrypt.compare(
             credentials.password,
             user.password,
           );

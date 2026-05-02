@@ -23,6 +23,6 @@ export async function GET(req: NextRequest) {
     return new NextResponse(JSON.stringify(designs), { status: 200 });
     // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse('Failed to fetch designs', { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

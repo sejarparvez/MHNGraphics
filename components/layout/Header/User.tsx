@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useConversations } from '@/hooks/use-conversation';
+import { clearCsrfToken } from '@/lib/apiClient';
 import { cn } from '@/lib/utils';
 
 interface UserDropdownProps {
@@ -218,7 +219,10 @@ export default function UserDropdown({
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() => signOut({ redirect: true, callbackUrl: '/' })}
+                  onClick={() => {
+                    clearCsrfToken();
+                    signOut({ redirect: true, callbackUrl: '/' });
+                  }}
                   className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
                 >
                   Log Out

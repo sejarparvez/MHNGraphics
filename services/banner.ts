@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { QUERY_KEYS } from '@/constant/QueryKeys';
+import apiClient from '@/lib/apiClient';
 
 export function useAdminHeroBanners() {
   return useQuery({
@@ -29,7 +30,7 @@ export function useAddHeroBanner() {
   return useMutation({
     mutationFn: async (formData: FormData) => {
       // 1. Define the promise for the request
-      const addPromise = axios
+      const addPromise = apiClient
         .post('/api/admin/banner/hero', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         })

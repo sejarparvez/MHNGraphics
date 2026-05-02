@@ -31,11 +31,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { clearCsrfToken } from '@/lib/apiClient';
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { data: session } = useSession();
   const handleLogout = () => {
+    clearCsrfToken();
     signOut({ redirect: true, callbackUrl: '/' });
   };
   return (

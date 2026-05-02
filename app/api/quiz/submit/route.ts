@@ -1,11 +1,15 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
 
 const secret = process.env.NEXTAUTH_SECRET;
 
 export async function POST(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const token = await getToken({ req, secret });
 
     if (!token) {

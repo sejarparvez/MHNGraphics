@@ -6,21 +6,6 @@
 **Auth:** next-auth 4.24.13
 **Runtime:** Bun
 
----
-
-## Resolved
-
-- [x] **No Security Headers** — Added headers + CSP to `next.config.mjs`
-- [x] **Stored XSS** — Sanitized with `DOMPurify` in `SingleDesign.tsx`
-- [x] **No Auth on Admin Endpoints** — `lib/auth.ts` helper applied to all admin routes
-- [x] **SMS API Wide Open** — Restricted to ADMIN only
-- [x] **CORS Wildcard `*`** — Replaced with origin whitelist in `app/api/notice/route.ts`
-- [x] **HTML Injection in Contact Email** — Escaped with `escapeHtml()` + Zod validation
-- [x] **`userId` from Request Body (Comment Forgery)** — Derived from session token
-- [x] **Mass Assignment in Application PATCH** — Field whitelist added, admin-only fields separated
-- [x] **SMS API Uses HTTP** — Switched to HTTPS in `lib/sms.ts`
-
----
 
 ## HIGH Issues
 
@@ -68,7 +53,7 @@ No rate limiting on: signup, login, quiz submission, SMS sending, email contact 
 
 ## MEDIUM Issues
 
-### 5. No CSRF Protection on Custom Routes
+### 4. No CSRF Protection on Custom Routes
 
 next-auth provides CSRF tokens for auth routes, but custom API routes have no CSRF protection. POST/PUT/DELETE/PATCH requests are vulnerable to CSRF if the user is authenticated via cookies.
 
@@ -76,62 +61,4 @@ next-auth provides CSRF tokens for auth routes, but custom API routes have no CS
 
 ---
 
-### 6. Dual Prisma Client Instances
-**Files:** `lib/prisma.ts`, `components/helper/prisma/Prisma.tsx`
 
-Two separate Prisma client instances are created. No singleton pattern or connection pooling.
-
-**Risk:** Database connection pool exhaustion, potential data inconsistency.
-
-**Fix:** Consolidate into a single singleton Prisma client in `lib/prisma.ts`.
-
----
-
-### 7. User Listing Without Auth (PII Leak)
-**File:** `app/api/users/route.ts`
-
-The GET endpoint returns a paginated list of all verified users with names, emails, phone numbers, and images — with no authentication required.
-
-**Risk:** PII exposure, enables scraping of user database.
-
-**Fix:** Restrict to authenticated admin users only.
-
----
-
-### 8. Information Disclosure in Error Messages
-
-Some routes return internal state in error messages, e.g., `app/api/editprofile/route.ts:131` returns "User password is null".
-
-**Fix:** Return generic error messages to clients, log details server-side.
-
----
-
-## LOW Issues
-
-### 9. Cloudinary API Key Exposed as `NEXT_PUBLIC_`
-**File:** `utils/cloudinary.ts:5`
-
-The `NEXT_PUBLIC_` prefix exposes this to the client bundle. Cloudinary API key is designed to be public, but the API secret must never be public (it correctly isn't).
-
-**Risk:** Low — acceptable by design, but monitor for abuse.
-
----
-
-### 10. Synchronous bcrypt in Auth Callback
-**File:** `services/auth.ts:60-63`
-
-```ts
-const passwordMatch = bcrypt.compareSync(credentials.password, user.password);
-```
-
-Using `compareSync` blocks the event loop during authentication.
-
-**Fix:** Use async `bcrypt.compare()` instead.
-
----
-
-## Priority Remediation Order
-
-1. Add rate limiting to auth, signup, SMS, contact, quiz
-2. Consolidate Prisma client into a single singleton
-3. Add CSRF protection to state-changing custom API routes

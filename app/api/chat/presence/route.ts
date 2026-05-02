@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/Options';
+import { validateCsrf } from '@/lib/csrf';
 import { getUserStatus, updateUserStatus } from '@/lib/presence';
 
 interface CustomSession {
@@ -15,6 +16,9 @@ interface CustomSession {
 // API route to update user's online status
 export async function POST(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const session = (await getServerSession(authOptions)) as CustomSession;
     if (!session?.user?.id) {
       return new NextResponse('Unauthorized', { status: 401 });

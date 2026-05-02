@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
 import { MessageCircle, Send, Trash } from 'lucide-react';
@@ -38,6 +37,7 @@ import {
 } from '@/components/ui/form';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
+import apiClient from '@/lib/apiClient';
 import type { Design } from '@/utils/Interface';
 
 const FormSchema = z.object({
@@ -79,20 +79,25 @@ export function Comments({
       designId: data.id,
     };
 
-    toast.promise(axios.post('/api/design/single-design/comments', payload), {
-      loading: 'Submitting your comment...',
-      success: () => {
-        refetch();
-        form.reset();
-        return 'Comment submitted successfully!';
+    toast.promise(
+      apiClient.post('/api/design/single-design/comments', payload),
+      {
+        loading: 'Submitting your comment...',
+        success: () => {
+          refetch();
+          form.reset();
+          return 'Comment submitted successfully!';
+        },
+        error: 'Failed to submit your comment. Please try again.',
       },
-      error: 'Failed to submit your comment. Please try again.',
-    });
+    );
   }
 
   function handleDelete(commentId: string) {
     toast.promise(
-      axios.delete(`/api/design/single-design/comments?commentId=${commentId}`),
+      apiClient.delete(
+        `/api/design/single-design/comments?commentId=${commentId}`,
+      ),
       {
         loading: 'Deleting comment...',
         success: () => {

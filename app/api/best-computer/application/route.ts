@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { UploadImage } from '@/components/helper/image/UploadImage';
 import { bkashConfig } from '@/lib/bkash';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
 import { sendSMS } from '@/lib/sms';
 import { createPayment } from '@/services/bkash';
@@ -28,6 +29,9 @@ const getNumberValue = (formData: FormData, key: string): number | null => {
 
 export async function POST(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const token = await getToken({ req, secret });
     const userId = token?.sub;
 
@@ -304,6 +308,9 @@ export async function GET(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const token = await getToken({ req, secret });
     const userId = token?.sub;
     const userEmail = token?.email;
@@ -340,7 +347,7 @@ export async function DELETE(req: NextRequest) {
       if (application.imageId) {
         const result = await cloudinary.uploader.destroy(application.imageId);
         if (result.result !== 'ok') {
-          return new NextResponse('error', { status: 400 });
+          return new NextResponse('Image upload failed', { status: 400 });
         }
       }
 
@@ -361,11 +368,14 @@ export async function DELETE(req: NextRequest) {
     }
     // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse('Error deleting application', { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
 export async function PATCH(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const formData = await req.formData();
     const id = getStringValue(formData, 'id');
     const token = await getToken({ req, secret });
@@ -415,7 +425,7 @@ export async function PATCH(req: NextRequest) {
         currentDesign.imageId,
       );
       if (deleteResult.result !== 'ok') {
-        return new NextResponse('Error deleting image', { status: 400 });
+        return new NextResponse('Image delete failed', { status: 400 });
       }
       image = '';
       imageId = '';

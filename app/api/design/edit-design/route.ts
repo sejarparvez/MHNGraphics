@@ -1,5 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 import { UploadImage } from '@/components/helper/image/UploadImage';
+import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
 import cloudinary from '@/utils/cloudinary';
 
@@ -30,6 +32,14 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
+    const csrfError = validateCsrf(req);
+    if (csrfError) return csrfError;
+
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+
     const formData = await req.formData();
     const designId = getStringValue(formData, 'productId');
 
@@ -55,13 +65,18 @@ export async function PATCH(req: NextRequest) {
       return new NextResponse('Design not found', { status: 404 });
     }
 
+    // Verify user is author or admin
+    if (token.role !== 'ADMIN' && token.sub !== currentDesign.authorId) {
+      return new NextResponse('Forbidden: not the author', { status: 403 });
+    }
+
     // Handle image deletion if flagged
     if (deletedImage && currentDesign.imageId) {
       const deleteResult = await cloudinary.uploader.destroy(
         currentDesign.imageId,
       );
       if (deleteResult.result !== 'ok') {
-        return new NextResponse('Error deleting image', { status: 400 });
+        return new NextResponse('Image delete failed', { status: 400 });
       }
     }
 
