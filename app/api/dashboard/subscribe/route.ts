@@ -1,19 +1,26 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { sendWelcomeEmail } from '@/components/helper/mail/SendMail';
 import Prisma from '@/lib/prisma';
+import { SubscribeSchema } from '@/lib/Schemas';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { email } = body;
 
-    // Validate email format
-    if (!email || !email.includes('@')) {
+    // Validate with Zod schema
+    const validationResult = SubscribeSchema.safeParse(body);
+
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Invalid email address' },
+        {
+          error: 'Validation failed',
+          details: validationResult.error.flatten(),
+        },
         { status: 400 },
       );
     }
+
+    const { email } = validationResult.data;
 
     // Check if the email is already subscribed
     const existingSubscriber = await Prisma.subscriber.findUnique({
@@ -59,17 +66,24 @@ export async function DELETE(req: NextRequest) {
     const url = new URL(req.url);
     const email = url.searchParams.get('mail');
 
-    // Validate email format
-    if (!email || !email.includes('@')) {
+    // Validate with Zod schema
+    const validationResult = SubscribeSchema.safeParse({ email });
+
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Invalid email address' },
+        {
+          error: 'Validation failed',
+          details: validationResult.error.flatten(),
+        },
         { status: 400 },
       );
     }
 
+    const { email: validEmail } = validationResult.data;
+
     // Check if the email exists in the subscribers list
     const existingSubscriber = await Prisma.subscriber.findUnique({
-      where: { email },
+      where: { email: validEmail },
     });
 
     if (!existingSubscriber) {
@@ -81,7 +95,7 @@ export async function DELETE(req: NextRequest) {
 
     // Delete the email from the database
     await Prisma.subscriber.delete({
-      where: { email },
+      where: { email: validEmail },
     });
 
     return NextResponse.json(

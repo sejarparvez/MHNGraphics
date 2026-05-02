@@ -3,6 +3,7 @@ import { UploadImage } from '@/components/helper/image/UploadImage';
 import { requireAuth } from '@/lib/auth';
 import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
+import { HeroBannerSchema } from '@/lib/Schemas';
 
 export async function POST(req: NextRequest) {
   const authError = await requireAuth(req, ['ADMIN']);
@@ -23,10 +24,29 @@ export async function POST(req: NextRequest) {
     const isActive = formData.get('isActive') === 'true';
     const imageFile = formData.get('image') as Blob | null;
 
-    if (!title) {
-      return NextResponse.json({ error: 'Title is required' }, { status: 400 });
+    // Validate with Zod schema
+    const validationResult = HeroBannerSchema.safeParse({
+      title,
+      subtitle,
+      slogan,
+      bannerPosition,
+      alignment,
+      tag,
+      isActive,
+      image: imageFile ?? undefined,
+    });
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: validationResult.error.flatten(),
+        },
+        { status: 400 },
+      );
     }
 
+    // Ensure imageFile is not null at this point (validated by Zod)
     if (!imageFile) {
       return NextResponse.json({ error: 'Image is required' }, { status: 400 });
     }

@@ -9,20 +9,20 @@
 
 ## HIGH Issues
 
-### 1. Missing Input Validation
+### 1. Missing Input Validation - ✅ FIXED
 **Files:** Multiple API routes
 
 Routes accepting raw `req.json()` or `formData` without Zod/schema validation:
 
-| Route | Issue |
-|-------|-------|
-| `POST /api/design/single-design` | No validation on name, description, category, tags |
-| `POST /api/best-computer/blood-bank` | No validation — stores raw form data |
-| `POST /api/admin/banner/hero` | No validation beyond null checks |
-| `POST /api/notice` | No auth, no validation |
-| `POST /api/dashboard/subscribe` | Weak email validation (`includes('@')`) |
+| Route | Issue | Status |
+|-------|-------|--------|
+| `POST /api/design/single-design` | No validation on name, description, category, tags | ✅ Fixed with `NewDesignSchema` |
+| `POST /api/best-computer/blood-bank` | No validation — stores raw form data | ✅ Fixed with `BloodDonationSchema` |
+| `POST /api/admin/banner/hero` | No validation beyond null checks | ✅ Fixed with `HeroBannerSchema` |
+| `POST /api/notice` | No auth, no validation | ✅ Fixed with `NoticeSchema` |
+| `POST /api/dashboard/subscribe` | Weak email validation (`includes('@')`) | ✅ Fixed with `SubscribeSchema` |
 
-**Fix:** Add Zod schemas to all routes accepting user input.
+**Fix:** Added Zod schemas to `lib/Schemas.ts` and applied validation to all routes accepting user input. Validation matches frontend schemas where applicable.
 
 ---
 

@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth/next';
 import { UploadImage } from '@/components/helper/image/UploadImage';
 import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
+import { NewDesignSchema } from '@/lib/Schemas';
 import cloudinary from '@/utils/cloudinary';
 import { authOptions } from '../../auth/[...nextauth]/Options';
 
@@ -67,6 +68,31 @@ export async function POST(req: NextRequest) {
         .split(',')
         .map((tag) => tag.trim()) || [];
 
+    // Validate with Zod schema
+    const validationResult = NewDesignSchema.safeParse({
+      name,
+      description,
+      category,
+      tags,
+    });
+
+    if (!validationResult.success) {
+      return new NextResponse(
+        JSON.stringify({
+          error: 'Validation failed',
+          details: validationResult.error.flatten(),
+        }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+
+    const {
+      name: validName,
+      description: validDescription,
+      category: validCategory,
+      tags: validTags,
+    } = validationResult.data;
+
     // Handle image file if present
     const imageFile = formData.get('image') as Blob;
     let imageUrl = { secure_url: '', public_id: '' };
@@ -79,10 +105,10 @@ export async function POST(req: NextRequest) {
     // Insert data into the database using Prisma
     const design = await Prisma.design.create({
       data: {
-        name,
-        description,
-        category,
-        tags,
+        name: validName,
+        description: validDescription,
+        category: validCategory,
+        tags: validTags,
         status,
         image: imageUrl.secure_url,
         imageId: imageUrl.public_id,

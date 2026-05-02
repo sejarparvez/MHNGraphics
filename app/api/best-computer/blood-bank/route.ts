@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next';
 import { UploadImage } from '@/components/helper/image/UploadImage';
 import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
+import { BloodDonationSchema } from '@/lib/Schemas';
 import cloudinary from '@/utils/cloudinary';
 import { authOptions } from '../../auth/[...nextauth]/Options';
 import type { CustomSession } from '../../profile/route';
@@ -27,9 +28,48 @@ export async function POST(req: NextRequest) {
     const occupation = getStringValue(formData, 'Occupation');
     const number = getStringValue(formData, 'number');
     const number2 = getStringValue(formData, 'number2');
+    const imageFile = formData.get('image') as Blob | null;
+
+    // Validate with Zod schema
+    const validationResult = BloodDonationSchema.safeParse({
+      fullName: name,
+      birthDay: birthDate,
+      bloodGroup,
+      allergies,
+      donatedBefore,
+      diseases,
+      district,
+      address,
+      Occupation: occupation,
+      number,
+      number2,
+      image: imageFile,
+    });
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: validationResult.error.flatten(),
+        },
+        { status: 400 },
+      );
+    }
+
+    const {
+      fullName,
+      bloodGroup: validBloodGroup,
+      allergies: validAllergies,
+      donatedBefore: validDonatedBefore,
+      diseases: validDiseases,
+      district: validDistrict,
+      address: validAddress,
+      Occupation: validOccupation,
+      number: validNumber,
+      number2: validNumber2,
+    } = validationResult.data;
 
     let imageUrl = { secure_url: '', public_id: '' };
-    const imageFile = formData.get('image') as Blob;
 
     if (imageFile) {
       try {
@@ -46,17 +86,17 @@ export async function POST(req: NextRequest) {
     // Save form data and image URL using Prisma
     const bloodDonation = await Prisma.bloodDonation.create({
       data: {
-        name,
+        name: fullName,
         birthDate,
-        bloodGroup,
-        allergies,
-        donatedBefore,
-        diseases,
-        district,
-        address,
-        occupation,
-        number,
-        number2,
+        bloodGroup: validBloodGroup,
+        allergies: validAllergies,
+        donatedBefore: validDonatedBefore,
+        diseases: validDiseases,
+        district: validDistrict,
+        address: validAddress,
+        occupation: validOccupation,
+        number: validNumber,
+        number2: validNumber2,
         image: imageUrl.secure_url,
         imageId: imageUrl.public_id,
       },
@@ -113,22 +153,77 @@ export async function PUT(req: NextRequest) {
       imageId = uploadResult.public_id;
     }
 
+    // Validate with Zod schema
+    const name = getStringValue(formData, 'fullName');
+    const birthDate = getStringValue(formData, 'birthDay');
+    const bloodGroup = getStringValue(formData, 'bloodGroup');
+    const allergies = getStringValue(formData, 'allergies');
+    const donatedBefore = getStringValue(formData, 'donatedBefore');
+    const diseases = getStringValue(formData, 'diseases');
+    const district = getStringValue(formData, 'district');
+    const address = getStringValue(formData, 'address');
+    const occupation = getStringValue(formData, 'Occupation');
+    const number = getStringValue(formData, 'number');
+    const number2 = getStringValue(formData, 'number2');
+
+    const validationResult = BloodDonationSchema.safeParse({
+      fullName: name,
+      birthDay: birthDate,
+      bloodGroup,
+      allergies,
+      donatedBefore,
+      diseases,
+      district,
+      address,
+      Occupation: occupation,
+      number,
+      number2,
+      image: imageData,
+    });
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: validationResult.error.flatten(),
+        },
+        { status: 400 },
+      );
+    }
+
+    const {
+      fullName,
+      bloodGroup: validBloodGroup,
+      allergies: validAllergies,
+      donatedBefore: validDonatedBefore,
+      diseases: validDiseases,
+      district: validDistrict,
+      address: validAddress,
+      Occupation: validOccupation,
+      number: validNumber,
+      number2: validNumber2,
+    } = validationResult.data;
+
     // Prepare updated data
     const updatedData: Record<string, string | Date | null> = {
-      name: getStringValue(formData, 'fullName'),
-      birthDate: getStringValue(formData, 'birthDay'),
-      bloodGroup: getStringValue(formData, 'bloodGroup'),
-      allergies: getStringValue(formData, 'allergies'),
-      donatedBefore: getStringValue(formData, 'donatedBefore'),
-      diseases: getStringValue(formData, 'diseases'),
-      district: getStringValue(formData, 'district'),
-      address: getStringValue(formData, 'address'),
-      occupation: getStringValue(formData, 'Occupation'),
-      number: getStringValue(formData, 'number'),
-      number2: getStringValue(formData, 'number2'),
+      name: fullName,
+      birthDate,
+      bloodGroup: validBloodGroup,
+      allergies: validAllergies,
+      donatedBefore: validDonatedBefore,
+      diseases: validDiseases,
+      district: validDistrict,
+      address: validAddress,
+      occupation: validOccupation,
+      number: validNumber,
       image,
       imageId,
     };
+
+    // Only add number2 if it exists
+    if (validNumber2 !== undefined) {
+      updatedData.number2 = validNumber2;
+    }
 
     // Remove null or undefined values
     // biome-ignore lint/suspicious/useIterableCallbackReturn: this is fine

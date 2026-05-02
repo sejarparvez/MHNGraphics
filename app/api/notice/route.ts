@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
 import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
+import { NoticeSchema } from '@/lib/Schemas';
 import { deletePDF, UploadPDF } from '@/utils/cloudinary';
 
 const ALLOWED_ORIGINS = ['https://www.training.oylkka.com'];
@@ -35,10 +36,17 @@ export async function POST(req: NextRequest) {
     const title = formData.get('title') as string;
     const pdf = formData.get('pdf') as File;
 
-    if (!title || !pdf) {
-      return new NextResponse('Title and PDF file are required', {
-        status: 400,
-      });
+    // Validate with Zod schema
+    const validationResult = NoticeSchema.safeParse({ title, pdf });
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: validationResult.error.flatten(),
+        },
+        { status: 400 },
+      );
     }
 
     // Upload the PDF to Cloudinary in the "notices" folder
