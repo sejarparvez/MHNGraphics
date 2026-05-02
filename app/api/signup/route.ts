@@ -1,22 +1,51 @@
 import bcrypt from 'bcrypt';
+import { pwnedPassword } from 'hibp';
 import { type NextRequest, NextResponse } from 'next/server';
 import generateCode from '@/components/helper/mail/GenerateCode';
 import sendVerificationEmail, {
   sendRegistrationEmail,
 } from '@/components/helper/mail/SendMail';
 import Prisma from '@/lib/prisma';
+import { SignUpSchema } from '@/lib/Schemas';
 
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     const { name, email, password } = data;
-    const hashedPassword = await bcrypt.hash(password, 10);
 
+    // 1. Basic presence check
     if (!name || !email || !password) {
       return new NextResponse('Missing name, email, or password', {
         status: 400,
       });
     }
+
+    // 2. Zod schema validation (complexity, length, format)
+    const parsed = SignUpSchema.safeParse({ name, email, password });
+    if (!parsed.success) {
+      return new NextResponse(
+        JSON.stringify({ errors: parsed.error.flatten().fieldErrors }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+
+    // 3. Breach check — uses k-anonymity, password never sent in full
+    const breachCount = await pwnedPassword(password);
+    if (breachCount > 0) {
+      return new NextResponse(
+        JSON.stringify({
+          errors: {
+            password: [
+              `This password has appeared in ${breachCount} data breach${breachCount === 1 ? '' : 'es'}. Please choose a different one.`,
+            ],
+          },
+        }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+
+    // 4. Hash only after all validation passes
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const isPhone = /^(\+?[1-9]\d{1,14}|0\d{9,15})$/.test(email);
@@ -64,9 +93,7 @@ export async function POST(req: NextRequest) {
         }),
         {
           status: 200,
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
         },
       );
     } else {
@@ -100,9 +127,7 @@ export async function POST(req: NextRequest) {
         }),
         {
           status: 200,
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
         },
       );
     }

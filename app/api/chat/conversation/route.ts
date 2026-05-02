@@ -1,7 +1,7 @@
+import { type NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth/next';
 import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
-import { getServerSession } from 'next-auth/next';
-import { type NextRequest, NextResponse } from 'next/server';
 import { authOptions } from '../../auth/[...nextauth]/Options';
 import type { CustomSession } from '../../profile/route';
 

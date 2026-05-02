@@ -47,6 +47,7 @@
         "embla-carousel-react": "^8.6.0",
         "emoji-mart": "^5.6.0",
         "framer-motion": "^11.11.9",
+        "hibp": "^15.2.1",
         "isomorphic-dompurify": "^3.11.0",
         "lodash.debounce": "^4.0.8",
         "lucide-react": "^0.563.0",
@@ -1078,6 +1079,8 @@
     "hasown": ["hasown@2.0.2", "", { "dependencies": { "function-bind": "^1.1.2" } }, "sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ=="],
 
     "headers-polyfill": ["headers-polyfill@5.0.1", "", { "dependencies": { "@types/set-cookie-parser": "^2.4.10", "set-cookie-parser": "^3.0.1" } }, "sha512-1TJ6Fih/b8h5TIcv+1+Hw0PDQWJTKDKzFZzcKOiW1wJza3XoAQlkCuXLbymPYB8+ZQyw8mHvdw560e8zVFIWyA=="],
+
+    "hibp": ["hibp@15.2.1", "", {}, "sha512-f7FxrlBz5FGd/J7tx9DR1cCQNIzKTl4BLZzgRXeQblzcO/xiWGrvXBMwztRzjJVeFACpED6P+iVmU7of9eFqyA=="],
 
     "hono": ["hono@4.12.15", "", {}, "sha512-qM0jDhFEaCBb4TxoW7f53Qrpv9RBiayUHo0S52JudprkhvpjIrGoU1mnnr29Fvd1U335ZFPZQY1wlkqgfGXyLg=="],
 

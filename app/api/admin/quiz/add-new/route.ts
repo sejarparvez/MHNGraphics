@@ -1,8 +1,8 @@
+import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { requireAuth } from '@/lib/auth';
 import { validateCsrf } from '@/lib/csrf';
 import Prisma from '@/lib/prisma';
-import { type NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
 
 const OptionSchema = z.object({
   text: z.string().min(1, 'Option text is required'),

@@ -26,38 +26,14 @@ Routes accepting raw `req.json()` or `formData` without Zod/schema validation:
 
 ---
 
-### 2. Weak Password Policy
-**Files:** `lib/Schemas.ts:21-24`, `app/api/signup/route.ts:13`
 
-```ts
-password: z.string().min(6, ...).max(15, ...)
-```
-
-- Minimum 6 characters (OWASP recommends 8+)
-- No complexity requirements
-- No breach database checking
-
-**Fix:** Increase minimum to 8+, add complexity requirements, consider breach checking.
-
----
-
-### 3. No Rate Limiting Anywhere
+### 2. No Rate Limiting Anywhere
 
 No rate limiting on: signup, login, quiz submission, SMS sending, email contact form, or any API endpoint.
 
 **Risk:** Brute force, DoS, spam, resource exhaustion.
 
 **Fix:** Add rate limiting (e.g., `@upstash/ratelimit` or `express-rate-limit` adapted for Next.js).
-
----
-
-## MEDIUM Issues
-
-### 4. No CSRF Protection on Custom Routes
-
-next-auth provides CSRF tokens for auth routes, but custom API routes have no CSRF protection. POST/PUT/DELETE/PATCH requests are vulnerable to CSRF if the user is authenticated via cookies.
-
-**Fix:** Add CSRF token validation to state-changing custom API routes.
 
 ---
 

@@ -1,11 +1,11 @@
+import type { NextRequest } from 'next/server';
+import { getServerSession } from 'next-auth';
 import {
   buildCsrfCookie,
   CSRF_COOKIE,
   generateCsrfToken,
   getCookieValue,
 } from '@/lib/csrf';
-import { getServerSession } from 'next-auth';
-import type { NextRequest } from 'next/server';
 import { authOptions } from '../auth/[...nextauth]/Options';
 
 /**
