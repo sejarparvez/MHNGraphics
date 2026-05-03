@@ -17,7 +17,7 @@ const ratelimit = new Ratelimit({
 
 const authRatelimit = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(5, '1 m'),
+  limiter: Ratelimit.slidingWindow(15, '1 m'),
 });
 
 export async function proxy(request: NextRequest) {

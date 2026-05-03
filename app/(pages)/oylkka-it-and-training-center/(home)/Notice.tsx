@@ -1,9 +1,5 @@
 'use client';
 
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useNotice } from '@/services/notice';
 import { format, formatDistanceToNow, isToday, isYesterday } from 'date-fns';
 import { motion, useInView } from 'framer-motion';
 import {
@@ -22,6 +18,10 @@ import {
 import Link from 'next/link';
 import { useRef } from 'react';
 import { SiAnswer } from 'react-icons/si';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useNotice } from '@/services/notice';
 
 // ─── Design System ────────────────────────────────────────────────────────────
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];

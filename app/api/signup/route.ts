@@ -10,7 +10,7 @@ import { checkRateLimit } from '@/lib/rate-limit';
 import { SignUpSchema } from '@/lib/Schemas';
 
 export async function POST(req: NextRequest) {
-  const limit = await checkRateLimit(req, 3, '1 h', 'signup');
+  const limit = await checkRateLimit(req, 10, '1 h', 'signup');
   if (limit) return limit;
 
   try {
