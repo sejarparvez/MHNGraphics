@@ -65,7 +65,8 @@ const services: Service[] = [
     tag: 'Education',
     link: '/oylkka-it-and-training-center',
     applyLink: '/oylkka-it-and-training-center/application',
-    quizLink: '/quiz',
+    quizLink:
+      'https://drive.google.com/file/d/1dz_kKE3bRXAq0kqIm0btfquV4wuoUMLi/view',
   },
   {
     id: 'it-agency',
@@ -217,7 +218,7 @@ const ServiceCard: FC<{ service: Service; index: number }> = ({
             >
               <Link href={quizLink}>
                 <Play className='w-3.5 h-3.5' />
-                Play Quiz
+                Download Apps For Android
               </Link>
             </Button>
           )}

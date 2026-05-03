@@ -345,9 +345,12 @@ export default function ModernNoticeBoard() {
                   02
                 </span>
               </div>
-              <Link href='/quiz'>
+              <Link
+                href='https://drive.google.com/file/d/1dz_kKE3bRXAq0kqIm0btfquV4wuoUMLi/view'
+                target='_blank'
+              >
                 <Button className='w-full h-10 gap-2'>
-                  কুইজ খেলুন
+                  অ্যাপ ডাউনলোড করুন
                   <ArrowRight className='w-4 h-4' />
                 </Button>
               </Link>
